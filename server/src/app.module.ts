@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -13,6 +14,8 @@ import { UsersModule } from './users/users.module';
       username: 'root',
       password: null,
       database: 'multiplayer_chess_game',
+      entities: [join(__dirname, '**', 'entities', '*.entity{.ts,.js}')],
+      synchronize: true,
     }),
     UsersModule,
   ],
