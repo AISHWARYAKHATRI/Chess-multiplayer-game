@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/users.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/users.dto';
 import * as bcrypt from 'bcrypt';
+
+import { CreateUserDto } from './dto/users.dto';
 import { USER } from 'src/shared/constants/response-messages';
+import { User } from './entities/users.entity';
 
 @Injectable()
 export class UsersService {
