@@ -16,31 +16,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
-  async register(@Body() userData: CreateUserDto, @Res() res: Response) {
-    try {
-      const newUser = await this.usersService.createNewUser(userData);
-
-      if (!newUser) {
-        throw new HttpException(
-          {
-            status: 'fail',
-            message: USER.ErrorMessages.USER_CREATION_FAILED,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      return res
-        .status(201)
-        .json({ message: USER.SuccessMessages.USER_CREATION_SUCCESS });
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: 'fail',
-          message: USER.ErrorMessages.USER_UNEXPECTED_ERROR,
-          details: error.message,
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async register(@Body() userData: CreateUserDto) {
+    return await this.usersService.createNewUser(userData);
   }
 }
