@@ -15,3 +15,14 @@ export class CreateUserDto {
   @MinLength(6)
   password: string;
 }
+
+export class LoginUserDto {
+  @IsNotEmpty()
+  @IsString()
+  username: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  password: string;
+}
