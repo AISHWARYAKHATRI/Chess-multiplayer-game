@@ -1,8 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
 
 import { CreateUserDto, LoginUserDto } from './dto/users.dto';
 import { USER } from 'src/shared/constants/response-messages';
@@ -15,6 +20,13 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async findUser(identifier: string) {
+    const user = await this.userRepository.findOne({
+      where: [{ username: identifier }, { email: identifier }],
+    });
+
+    return user;
+  }
   async createNewUser(user: CreateUserDto) {
     const { password, email, username } = user;
 
@@ -60,7 +72,8 @@ export class UsersService {
   }
 
   async login(credentials: LoginUserDto) {
-    const { password, username } = credentials;
+    const { username, password } = credentials;
+
     // if email or password are not provided
     if (!username || !password) {
       throw new HttpException(
@@ -68,31 +81,33 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
     // find user
     const user = await this.userRepository.findOne({
-      where: [{ email: username }, { username }],
+      where: [{ username }],
     });
+
     // if user does not exist
     if (!user) {
-      throw new HttpException(
-        USER.ErrorMessages.USER_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new BadRequestException(USER.ErrorMessages.USER_INVALID_CREDS);
     }
+
     // check password
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
     if (!isPasswordCorrect) {
-      throw new HttpException(
-        USER.ErrorMessages.INVALID_CREDENTIALS,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException(USER.ErrorMessages.USER_INVALID_CREDS);
     }
+
     // Generate JWT token
-    const payload = { sub: user.id, username: user.username };
-    const token = this.jwtService.sign(payload);
+    const tokenPayload = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    };
+    const token = this.jwtService.sign(tokenPayload);
 
     return {
-      status: HttpStatus.OK,
       message: 'Login successful',
       access_token: token,
     };

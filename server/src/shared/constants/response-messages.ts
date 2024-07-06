@@ -8,6 +8,7 @@ export const USER = {
     USERNAME_ALREADY_EXIST: 'Username already taken',
     EMAIL_OR_PASSWORD_REQUIRED: 'Email and password are required',
     INVALID_CREDENTIALS: 'Invalid credentials',
+    USER_INVALID_CREDS: 'Invalid credentials',
   },
   SuccessMessages: {
     USER_CREATION_SUCCESS: 'User successfully registered',
