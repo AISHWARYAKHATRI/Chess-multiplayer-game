@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
+import { join } from 'path';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { join } from 'path';
 
 @Module({
   imports: [
@@ -18,6 +20,10 @@ import { join } from 'path';
       synchronize: true,
     }),
     UsersModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

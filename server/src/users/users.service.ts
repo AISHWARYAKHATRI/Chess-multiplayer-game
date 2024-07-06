@@ -2,8 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
-import { CreateUserDto } from './dto/users.dto';
+import { CreateUserDto, LoginUserDto } from './dto/users.dto';
 import { USER } from 'src/shared/constants/response-messages';
 import { User } from './entities/users.entity';
 
@@ -11,6 +12,7 @@ import { User } from './entities/users.entity';
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async createNewUser(user: CreateUserDto) {
@@ -54,6 +56,45 @@ export class UsersService {
     return {
       status: HttpStatus.CREATED,
       message: 'User registered',
+    };
+  }
+
+  async login(credentials: LoginUserDto) {
+    const { password, username } = credentials;
+    // if email or password are not provided
+    if (!username || !password) {
+      throw new HttpException(
+        USER.ErrorMessages.EMAIL_OR_PASSWORD_REQUIRED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    // find user
+    const user = await this.userRepository.findOne({
+      where: [{ email: username }, { username }],
+    });
+    // if user does not exist
+    if (!user) {
+      throw new HttpException(
+        USER.ErrorMessages.USER_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    // check password
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      throw new HttpException(
+        USER.ErrorMessages.INVALID_CREDENTIALS,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    // Generate JWT token
+    const payload = { sub: user.id, username: user.username };
+    const token = this.jwtService.sign(payload);
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Login successful',
+      access_token: token,
     };
   }
 }

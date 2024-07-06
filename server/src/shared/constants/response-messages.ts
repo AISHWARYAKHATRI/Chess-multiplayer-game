@@ -6,6 +6,8 @@ export const USER = {
       'An unexpected error occurred while creating the user.',
     USER_EMAIL_ALREADY_EXIST: 'User with this email already exists',
     USERNAME_ALREADY_EXIST: 'Username already taken',
+    EMAIL_OR_PASSWORD_REQUIRED: 'Email and password are required',
+    INVALID_CREDENTIALS: 'Invalid credentials',
   },
   SuccessMessages: {
     USER_CREATION_SUCCESS: 'User successfully registered',
