@@ -30,7 +30,7 @@ export class Authguard implements CanActivate {
       throw new UnauthorizedException(USER.ErrorMessages.USER_NOT_FOUND);
     }
 
-    const { password, ...userData } = user;
+    const { ...userData } = user;
 
     request.user = userData;
 
