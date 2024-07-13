@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Game } from 'src/modules/entities/chess.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -13,4 +21,25 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
+
+  @Column()
+  country: string;
+
+  @OneToMany(() => Game, (game) => game.player_black)
+  black_games: Game[];
+
+  @OneToMany(() => Game, (game) => game.player_white)
+  white_games: Game[];
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

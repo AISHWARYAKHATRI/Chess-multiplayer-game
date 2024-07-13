@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
+import { ChessModule } from './modules/chess/chess.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './modules/users/users.module';
       synchronize: true,
     }),
     UsersModule,
+    ChessModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',

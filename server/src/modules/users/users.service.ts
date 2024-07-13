@@ -27,6 +27,7 @@ export class UsersService {
 
     return user;
   }
+
   async createNewUser(user: CreateUserDto) {
     const { password, email, username } = user;
 
@@ -83,9 +84,7 @@ export class UsersService {
     }
 
     // find user
-    const user = await this.userRepository.findOne({
-      where: [{ username }],
-    });
+    const user = await this.findUser(username);
 
     // if user does not exist
     if (!user) {
