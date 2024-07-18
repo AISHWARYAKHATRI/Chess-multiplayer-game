@@ -1,33 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { MoveDto } from './dto/move.dto';
-import { GameState } from './interface/chess.interface';
+import { GameDto, MoveDto } from './dto/game.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Game } from './entities/chess.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ChessService {
-  private games: { [key: string]: GameState } = {};
+  constructor(
+    @InjectRepository(Game) private readonly gameRepository: Repository<Game>,
+  ) {}
+  // private games: { [key: string]: GameState } = {};
 
-  processMove(move: MoveDto): GameState {
-    // Process the chess move here and update the game state
-    const gameId = move.gameId;
-    const game = this.games[gameId] || this.createGame(gameId);
+  // processMove(move: MoveDto): GameState {
+  //   // Process the chess move here and update the game state
+  //   const gameId = move.gameId;
+  //   const game = this.games[gameId] || this.createGame(gameId);
 
-    // Update the game state with the new move
-    // game.board = updateBoard(game.board, move);
-    // game.turn = toggleTurn(game.turn);
+  //   // Update the game state with the new move
+  //   // game.board = updateBoard(game.board, move);
+  //   // game.turn = toggleTurn(game.turn);
 
-    this.games[gameId] = game;
+  //   this.games[gameId] = game;
+  //   return game;
+  // }
+
+  async createGame(newGame: GameDto) {
+    const game = await this.gameRepository.create(newGame);
     return game;
-  }
-
-  createGame(gameId: string): GameState {
-    const initialState: GameState = {
-      gameId,
-      board: this.initializeBoard(),
-      turn: 'white',
-      players: [],
-    };
-    this.games[gameId] = initialState;
-    return initialState;
   }
 
   initializeBoard(): string[][] {
