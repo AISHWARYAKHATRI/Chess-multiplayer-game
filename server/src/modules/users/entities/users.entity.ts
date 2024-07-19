@@ -1,4 +1,4 @@
-import { Game } from 'src/modules/entities/chess.entity';
+import { Game } from 'src/modules/chess/entities/chess.entity';
 import {
   Entity,
   Column,
