@@ -1,4 +1,5 @@
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -46,6 +47,25 @@ export class ChessGateway implements OnGatewayConnection, OnGatewayDisconnect {
         turn: SIDES.WHITE,
       });
       this.server.emit(GAME_EVENTS.GAME_CREATED, game);
+    } catch (error) {
+      client.emit(GAME_EVENTS.EXCEPTION, error.message);
+    }
+  }
+
+  @SubscribeMessage(GAME_EVENTS.JOIN_GAME)
+  async handleJoinGame(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() data,
+  ) {
+    try {
+      const { gameId } = JSON.parse(data);
+
+      const result = await this.chessService.joinGame(gameId, client.user.id);
+      if (result.message === 'You have successfully joined the game.') {
+        client.emit(GAME_EVENTS.GAME_JOINED, result.game);
+      } else {
+        client.emit(GAME_EVENTS.JOIN_FAILED, result.message);
+      }
     } catch (error) {
       client.emit(GAME_EVENTS.EXCEPTION, error.message);
     }

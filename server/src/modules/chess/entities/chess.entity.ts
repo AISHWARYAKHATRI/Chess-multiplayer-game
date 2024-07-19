@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -49,12 +50,23 @@ export class Game {
   })
   turn: string;
 
-  @Column('text')
-  board?: string;
+  @Column({
+    type: 'text',
+  })
+  board: string;
 
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @BeforeInsert()
+  setInitialBoard() {
+    if (!this.board) {
+      this.board =
+        this.board ||
+        'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    }
+  }
 }

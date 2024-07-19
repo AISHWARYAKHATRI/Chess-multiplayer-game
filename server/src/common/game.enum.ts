@@ -9,6 +9,8 @@ export enum GAME_EVENTS {
   CREATE_GAME = 'createGame',
   GAME_CREATED = 'gameCreated',
   JOIN_GAME = 'joinGame',
+  GAME_JOINED = 'gameJoined',
+  JOIN_FAILED = 'joinGameFailed',
   DISCONNECT = 'disconnect',
   DISCONNECTED = 'disconnected',
   EXCEPTION = 'exception',
