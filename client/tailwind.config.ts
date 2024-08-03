@@ -8,10 +8,18 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        cgreen: {
+          100: "#ccfe7e",
+          200: "#b8fe69",
+          300: "#9BEC00",
+        },
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "auth-grid": "url('/grid.svg')",
       },
     },
   },
