@@ -49,3 +49,9 @@
 .lined {
   @apply border-cgreen-300 bg-transparent border text-white;
 }
+
+.plain {
+  @apply bg-transparent text-white;
+  @apply hover:bg-gray-900;
+  @apply active:text-white;
+}

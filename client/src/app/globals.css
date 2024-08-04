@@ -22,7 +22,7 @@ body {
 }
 
 .auth-main {
-  width: 100vw;
+  min-width: 100%;
   min-height: 100vh;
   position: fixed;
   display: flex;
@@ -47,7 +47,7 @@ body {
   background-image: url("/grid.svg");
   z-index: 1;
   position: absolute;
-  width: 100%;
+  min-width: 100%;
   height: 100%;
   top: 0;
   opacity: 0.8;

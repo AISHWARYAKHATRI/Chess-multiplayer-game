@@ -11,7 +11,7 @@ const config: Config = {
       colors: {
         cgreen: {
           100: "#ccfe7e",
-          200: "#b8fe69",
+          200: "#B8F533",
           300: "#9BEC00",
         },
       },

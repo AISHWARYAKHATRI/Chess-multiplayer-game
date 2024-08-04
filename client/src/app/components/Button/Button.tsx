@@ -28,17 +28,34 @@ Button.displayName = "Button";
 
 const LinedButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, ...props }, ref) => (
-    <Button ref={ref} className={classNames(styles.lined)} {...props} />
+    <Button
+      ref={ref}
+      className={classNames(styles.lined, className)}
+      {...props}
+    />
   )
 );
 
 LinedButton.displayName = "LinedButton";
+
+const PlainButton = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, ...props }, ref) => (
+    <Button
+      ref={ref}
+      className={classNames(styles.plain, className)}
+      {...props}
+    />
+  )
+);
+
+PlainButton.displayName = "PlainButton";
 
 const _Button = Object.assign(Button, {
   Sizes: Options.Size,
   Shapes: Options.Shape,
   Variants: Options.Variant,
   Lined: LinedButton,
+  Plain: PlainButton,
 });
 
 export default _Button;
