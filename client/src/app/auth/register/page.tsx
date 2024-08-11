@@ -57,7 +57,7 @@ const Page = () => {
             <InputField type="text" name="firstName" label="Firstname" />
             <InputField type="text" name="lastName" label="Lastname" />
             <InputField type="text" name="username" label="Username" />
-            <InputField type="password" name="email" label="Email" />
+            <InputField type="email" name="email" label="Email" />
             <InputField type="password" name="password" label="Password" />
             <InputField
               type="password"
