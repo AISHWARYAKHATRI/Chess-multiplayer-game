@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 1, 1, 1;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: white;
+  background: hsl(210deg, 30%, 8%);
+}
+
+.auth-main {
+  min-width: 100%;
+  min-height: 100vh;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 120px 24px 160px 24px;
+  pointer-events: none;
+}
+
+.auth-main:before {
+  background: radial-gradient(circle, rgba(0, 0, 0, 0) 0, #000000 100%);
+  position: absolute;
+  content: "";
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
+.auth-main:after {
+  content: "";
+  background-image: url("/grid.svg");
+  z-index: 1;
+  position: absolute;
+  min-width: 100%;
+  height: 100%;
+  top: 0;
+  opacity: 0.8;
+  filter: brigtness(20%);
+}
+
+.gradient {
+  height: fit-content;
+  z-index: 3;
+  width: 100%;
+  max-width: 640px;
+  position: absolute;
+  content: "";
+  filter: blur(100px) saturate(150%);
+  top: 80px;
+  opacity: 0.15;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.form-control {
+  resize: none;
+  @apply bg-black outline-none w-full p-3 rounded-[12px] transition-all duration-150 bg-neutral-600;
+  &:focus {
+    @apply ring ring-cgreen-100;
+  }
+}
