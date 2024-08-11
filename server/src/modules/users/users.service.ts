@@ -106,9 +106,14 @@ export class UsersService {
     };
     const token = this.jwtService.sign(tokenPayload);
 
+    delete user?.password;
+
     return {
       message: 'Login successful',
-      access_token: token,
+      user: {
+        access_token: token,
+        ...user,
+      },
     };
   }
 }
