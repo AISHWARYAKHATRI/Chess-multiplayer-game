@@ -10,6 +10,7 @@ import { REQUIRED_FIELD } from "@/app/data/constants";
 import { useAppSelector } from "@/app/hooks/useAppSelector";
 import { useAppDispatch } from "@/app/hooks/useAppDispatch";
 import { registerUser } from "@/app/redux/slices/userSlice";
+import { withoutAuth } from "@/app/components/withoutAuth";
 
 const Page = () => {
   const loading = useAppSelector((state) => state.user.loading);
@@ -79,4 +80,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withoutAuth(Page);

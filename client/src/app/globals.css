@@ -8,12 +8,21 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+@font-face {
+  font-family: "kanit";
+  src: url("../../public/Kanit/Kanit-Bold.ttf");
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+}
+
+.kanit {
+  font-family: "kanit";
 }
 
 body {

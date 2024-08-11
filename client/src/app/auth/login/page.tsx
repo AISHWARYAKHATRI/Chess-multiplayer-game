@@ -11,6 +11,7 @@ import { LoginProps } from "@/app/api/services/authService";
 import { loginUser } from "@/app/redux/slices/userSlice";
 import { useAppDispatch } from "@/app/hooks/useAppDispatch";
 import { useAppSelector } from "@/app/hooks/useAppSelector";
+import { withoutAuth } from "@/app/components/withoutAuth";
 
 const Page = () => {
   const validationSchema = Yup.object().shape({
@@ -48,4 +49,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withoutAuth(Page);
