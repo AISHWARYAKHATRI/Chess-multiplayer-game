@@ -15,7 +15,7 @@ import { ChessModule } from './modules/chess/chess.module';
       host: '127.0.0.1',
       port: 3306,
       username: 'root',
-      password: 'wappnet@123',
+      password: '',
       database: 'multiplayer_chess_game',
       entities: [join(__dirname, '**', 'entities', '*.entity{.ts,.js}')],
       synchronize: true,
