@@ -88,7 +88,7 @@ export class UsersService {
 
     // if user does not exist
     if (!user) {
-      throw new BadRequestException(USER.ErrorMessages.USER_INVALID_CREDS);
+      throw new BadRequestException(USER.ErrorMessages.USER_NOT_FOUND);
     }
 
     // check password

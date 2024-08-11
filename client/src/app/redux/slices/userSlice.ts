@@ -40,7 +40,11 @@ const userSlice = createSlice({
     loading: false,
     user: {},
   },
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = {};
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(registerUser.pending, (state) => {
       state.loading = true;
@@ -63,5 +67,7 @@ const userSlice = createSlice({
     });
   },
 });
+
+export const { logout } = userSlice.actions;
 
 export default userSlice.reducer;
