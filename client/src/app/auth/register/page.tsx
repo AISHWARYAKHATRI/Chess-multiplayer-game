@@ -10,6 +10,7 @@ import { REQUIRED_FIELD } from "@/app/data/constants";
 import { useAppSelector } from "@/app/hooks/useAppSelector";
 import { useAppDispatch } from "@/app/hooks/useAppDispatch";
 import { registerUser } from "@/app/redux/slices/userSlice";
+import { withoutAuth } from "@/app/components/withoutAuth";
 
 const Page = () => {
   const loading = useAppSelector((state) => state.user.loading);
@@ -57,7 +58,7 @@ const Page = () => {
             <InputField type="text" name="firstName" label="Firstname" />
             <InputField type="text" name="lastName" label="Lastname" />
             <InputField type="text" name="username" label="Username" />
-            <InputField type="password" name="email" label="Email" />
+            <InputField type="email" name="email" label="Email" />
             <InputField type="password" name="password" label="Password" />
             <InputField
               type="password"
@@ -79,4 +80,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withoutAuth(Page);

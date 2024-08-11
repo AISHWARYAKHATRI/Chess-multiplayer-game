@@ -20,7 +20,8 @@ export class WebSocketGuard implements CanActivate {
     const token = client.handshake.headers.authorization;
 
     if (!token) {
-      throw new UnauthorizedException('Authorization token not found');
+      // throw new UnauthorizedException('Authorization token not found');
+      return;
     }
 
     const { id } = decodeToken(token);
