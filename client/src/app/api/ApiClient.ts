@@ -3,7 +3,7 @@ import axios from "axios";
 const ApiClient = axios.create();
 
 ApiClient.interceptors.request.use((config) => {
-  config.baseURL = process.env.NEXT_APP_BACKEND_URL;
+  config.baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
   return config;
 });
 

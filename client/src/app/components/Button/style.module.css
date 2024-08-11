@@ -54,4 +54,7 @@
   @apply bg-transparent text-white;
   @apply hover:bg-gray-900;
   @apply active:text-white;
+  &:disabled {
+    @apply bg-transparent text-blue-200/75;
+  }
 }

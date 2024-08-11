@@ -12,7 +12,11 @@ const InputField = ({ type, name, label }: Props) => {
     <div className="mb-4">
       <label htmlFor={name}>{label}</label>
       <Field name={name} type={type} className="form-control mt-1" />
-      <ErrorMessage component="div" name={name} />
+      <ErrorMessage
+        component="div"
+        name={name}
+        className="text-sm text-red-400 mt-1"
+      />
     </div>
   );
 };

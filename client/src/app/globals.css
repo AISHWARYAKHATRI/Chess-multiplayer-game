@@ -75,4 +75,7 @@ body {
 .form-control {
   resize: none;
   @apply bg-black outline-none w-full p-3 rounded-[12px] transition-all duration-150 bg-neutral-600;
+  &:focus {
+    @apply ring ring-cgreen-100;
+  }
 }
