@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
+import { join } from 'path';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './modules/users/users.module';
+import { ChessModule } from './modules/chess/chess.module';
 
 @Module({
   imports: [
@@ -10,8 +15,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       host: '127.0.0.1',
       port: 3306,
       username: 'root',
-      password: null,
+      password: 'wappnet@123',
       database: 'multiplayer_chess_game',
+      entities: [join(__dirname, '**', 'entities', '*.entity{.ts,.js}')],
+      synchronize: true,
+    }),
+    UsersModule,
+    ChessModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
     }),
   ],
   controllers: [AppController],
