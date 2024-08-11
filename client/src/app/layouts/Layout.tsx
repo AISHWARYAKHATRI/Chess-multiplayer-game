@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import Logo from "../../../public/logo.png";
 
 interface Props {
   children: ReactNode;
@@ -12,7 +11,9 @@ const Layout: React.FC<Props> = ({ children }) => {
         <div className="gradient" />
       </div>
       <main className="relative flex justify-center items-center">
-        <div className="w-full">{children}</div>
+        <div className="w-full flex justify-center items-center py-20 px-10 lg:px-64">
+          {children}
+        </div>
       </main>
     </section>
   );

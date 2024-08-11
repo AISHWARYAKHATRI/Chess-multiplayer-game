@@ -85,6 +85,13 @@ body {
   resize: none;
   @apply bg-black outline-none w-full p-3 rounded-[12px] transition-all duration-150 bg-neutral-600;
   &:focus {
-    @apply ring ring-cgreen-100;
+    @apply ring ring-orange-200;
+  }
+}
+
+.icon {
+  @apply cursor-pointer text-gray-400;
+  &:hover {
+    @apply text-gray-300;
   }
 }
