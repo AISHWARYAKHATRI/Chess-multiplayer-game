@@ -3,11 +3,13 @@ import React from "react";
 import { LogOut } from "lucide-react";
 import { useAppDispatch } from "@/app/hooks/useAppDispatch";
 import { logout } from "@/app/redux/slices/userSlice";
+import { toast } from "sonner";
 
 const Index = () => {
   const dispatch = useAppDispatch();
   const handleLogout = () => {
     dispatch(logout());
+    toast.success("Logout successful");
   };
 
   return (
