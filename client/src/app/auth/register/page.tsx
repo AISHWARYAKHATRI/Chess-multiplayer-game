@@ -13,7 +13,7 @@ import { registerUser } from "@/app/redux/slices/userSlice";
 import { withoutAuth } from "@/app/components/withoutAuth";
 
 const Page = () => {
-  const loading = useAppSelector((state) => state.user.loading);
+  const loading = useAppSelector((state) => state.auth.loading);
   const dispatch = useAppDispatch();
 
   const validationSchema = Yup.object().shape({

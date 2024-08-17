@@ -35,7 +35,7 @@ export class ChessService {
   }
 
   async joinGame(gameId: number, userId: number) {
-
+    
     const createdGame = await this.gameRepository.findOne({
       where: { id: gameId },
       relations: ['player_white', 'player_black'],

@@ -13,7 +13,7 @@ import { UseGuards } from '@nestjs/common';
 import { MoveDto } from '../dto/game.dto';
 import { ChessService } from '../chess.service';
 import { User } from 'src/modules/users/entities/users.entity';
-import { GAME_EVENTS, SIDES } from 'src/common/game.enum';
+import { GAME_EVENTS } from 'src/common/game.enum';
 import { WebSocketGuard } from 'src/guards/socket.guard';
 
 // Adds the user connecting to the socket
@@ -43,8 +43,7 @@ export class ChessGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleCreateGame(client: CustomSocket) {
     try {
       const game = await this.chessService.createGame({
-        player_white: client?.user,
-        turn: SIDES.WHITE,
+        player_white: client?.user?.id,
       });
       this.server.emit(GAME_EVENTS.GAME_CREATED, game);
     } catch (error) {

@@ -8,10 +8,11 @@ interface TokenPayload extends JwtPayload {
   username?: string;
 }
 
-export const jwtSign = (payload: TokenPayload) =>
-  sign(payload, appConfig.jwtSecretKey, {
+export const jwtSign = (payload: TokenPayload) => {
+  return sign(payload, appConfig.jwtSecretKey, {
     expiresIn: '60m',
   });
+};
 
 export const verifyToken = (token: string): JwtPayload => {
   try {

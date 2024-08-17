@@ -19,7 +19,7 @@ const Page = () => {
     password: Yup.string().required(REQUIRED_FIELD),
   });
   const dispatch = useAppDispatch();
-  const loading = useAppSelector((state) => state.user.loading);
+  const loading = useAppSelector((state) => state.auth.loading);
 
   return (
     <AuthLayout>

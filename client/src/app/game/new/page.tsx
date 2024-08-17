@@ -1,20 +1,30 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Layout from "../layouts/Layout";
+import Layout from "../../layouts/Layout";
 import { Chessboard } from "react-chessboard";
-import { useAppSelector } from "../hooks/useAppSelector";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppSelector } from "../../hooks/useAppSelector";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { Chess, Square, WHITE } from "chess.js";
-import { updateFen } from "../redux/slices/chessSlice";
+import { updateFen } from "../../redux/slices/chessSlice";
+import { useSocket } from "../../hooks/useSocket";
+import { withAuth } from "../../components/withAuth";
+import { GAME_EVENTS } from "../../data/constants";
 
 const Page = () => {
   const fen = useAppSelector((state) => state.chess.fen);
   const [chess, setChess] = useState(new Chess(fen));
   const dispatch = useAppDispatch();
+  const socket = useSocket(GAME_EVENTS.CREATE_GAME);
 
   useEffect(() => {
     dispatch(updateFen(chess.fen()));
-  }, []);
+    socket.on(GAME_EVENTS.GAME_CREATED, (gameData) => {
+      console.log("Game", gameData);
+    });
+    socket.on(GAME_EVENTS.EXCEPTION, (gameData) => {
+      console.log("Game", gameData);
+    });
+  }, [socket]);
 
   const handleMove = (source: Square, target: Square) => {
     try {
@@ -45,4 +55,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default withAuth(Page);

@@ -7,7 +7,7 @@ import { useAppSelector } from "../hooks/useAppSelector";
 
 export const withoutAuth = (Component: ComponentType) => {
   return function WithoutAuth(props: any) {
-    const user = useAppSelector((state) => state.user.user);
+    const user = useAppSelector((state) => state.auth.user);
     useEffect(() => {
       if (!isEmpty(user)) {
         redirect("/");
