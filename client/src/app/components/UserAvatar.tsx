@@ -2,7 +2,7 @@ import Avatar from "boring-avatars";
 import { useAppSelector } from "../hooks/useAppSelector";
 
 const UserAvatar = () => {
-  const username = useAppSelector((state) => state.user.user?.username);
+  const username = useAppSelector((state) => state.auth.user?.username);
 
   return (
     <div className="flex gap-3 items-center">

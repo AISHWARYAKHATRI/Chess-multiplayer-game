@@ -5,9 +5,10 @@ import { withAuth } from "./components/withAuth";
 import Layout from "./layouts/Layout";
 
 const Home = () => {
+  
   return (
-    <Layout>
-      <HomePage />  
+    <Layout containerStyle="w-full flex justify-center items-center py-20 px-10 lg:px-64">
+      <HomePage />
     </Layout>
   );
 };

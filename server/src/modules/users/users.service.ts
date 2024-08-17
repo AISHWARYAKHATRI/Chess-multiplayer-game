@@ -1,4 +1,3 @@
-import { JwtService } from '@nestjs/jwt';
 import {
   BadRequestException,
   HttpException,
@@ -12,12 +11,12 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto, LoginUserDto } from './dto/users.dto';
 import { USER } from 'src/shared/constants/response-messages';
 import { User } from './entities/users.entity';
+import { jwtSign } from 'src/utils/jwt.utils';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    private readonly jwtService: JwtService,
   ) {}
 
   async findUser(identifier: string) {
@@ -104,7 +103,7 @@ export class UsersService {
       email: user.email,
       username: user.username,
     };
-    const token = this.jwtService.sign(tokenPayload);
+    const token = jwtSign(tokenPayload);
 
     delete user?.password;
 

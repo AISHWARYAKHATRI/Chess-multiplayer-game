@@ -17,7 +17,7 @@ export class WebSocketGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const client = context.switchToWs().getClient();
-    const token = client.handshake.headers.authorization;
+    const token = client.handshake.auth.token;
 
     if (!token) {
       // throw new UnauthorizedException('Authorization token not found');

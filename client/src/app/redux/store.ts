@@ -1,20 +1,30 @@
 "use client";
 import { configureStore } from "@reduxjs/toolkit";
 import UserReducer from "./slices/userSlice";
+import ChessReducer from "./slices/chessSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
 const userPersistConfig = {
-  key: "root",
+  key: "user",
   storage,
   whitelist: ["user"],
+};
+
+const chessPersistConfig = {
+  key: "chess",
+  storage,
+  whitelist: ["game", "fen"],
 };
 
 const makeStore = () => {
   return configureStore({
     reducer: {
-      user: persistReducer(userPersistConfig, UserReducer),
+      auth: persistReducer(userPersistConfig, UserReducer),
+      chess: persistReducer(chessPersistConfig, ChessReducer),
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({ serializableCheck: false }),
   });
 };
 

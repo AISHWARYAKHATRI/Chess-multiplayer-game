@@ -1,6 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { GAME_RESULT, GAME_STATUS, SIDES } from 'src/common/game.enum';
-import { User } from 'src/modules/users/entities/users.entity';
+import { GAME_RESULT, GAME_STATUS } from 'src/common/game.enum';
 
 export class MoveDto {
   @IsString()
@@ -18,16 +17,13 @@ export class MoveDto {
 
 export class GameDto {
   @IsUUID()
-  player_white: User;
+  player_white: number;
 
   @IsUUID()
-  player_black?: User;
+  player_black?: number;
 
   @IsString()
   board?: string;
-
-  @IsEnum([SIDES.WHITE, SIDES.BLACK])
-  turn: string;
 
   @IsEnum([
     GAME_STATUS.ONGOING,
