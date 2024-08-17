@@ -29,13 +29,22 @@ export class ChessService {
   // }
 
   async createGame(newGame: GameDto) {
-    const game = this.gameRepository.create(newGame);
+    const playerWhite = await this.userRepository.findOneBy({
+      id: newGame.player_white,
+    });
+    const game = this.gameRepository.create({
+      ...newGame,
+      player_white: playerWhite,
+      board: newGame.board,
+      status: newGame.status,
+      result: newGame.result,
+      player_black: null,
+    });
     await this.gameRepository.save(game);
     return game.id;
   }
 
   async joinGame(gameId: number, userId: number) {
-    
     const createdGame = await this.gameRepository.findOne({
       where: { id: gameId },
       relations: ['player_white', 'player_black'],

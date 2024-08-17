@@ -3,25 +3,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import UserReducer from "./slices/userSlice";
 import ChessReducer from "./slices/chessSlice";
 import storage from "redux-persist/lib/storage";
-import {
-  persistReducer,
-  persistStore,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 
 const userPersistConfig = {
-  key: "root",
+  key: "user",
   storage,
   whitelist: ["user"],
 };
 
 const chessPersistConfig = {
-  key: "root",
+  key: "chess",
   storage,
   whitelist: ["game", "fen"],
 };
@@ -33,11 +24,7 @@ const makeStore = () => {
       chess: persistReducer(chessPersistConfig, ChessReducer),
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
-      }),
+      getDefaultMiddleware({ serializableCheck: false }),
   });
 };
 

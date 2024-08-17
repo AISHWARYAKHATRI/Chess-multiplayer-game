@@ -1,6 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { GAME_RESULT, GAME_STATUS } from 'src/common/game.enum';
-import { User } from 'src/modules/users/entities/users.entity';
 
 export class MoveDto {
   @IsString()
