@@ -2,18 +2,17 @@ import React, { ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
+  containerStyle?: string;
 }
 
-const Layout: React.FC<Props> = ({ children }) => {
+const Layout: React.FC<Props> = ({ children, containerStyle }) => {
   return (
     <section>
       <div className="auth-main">
         <div className="gradient" />
       </div>
       <main className="relative flex justify-center items-center">
-        <div className="w-full flex justify-center items-center py-20 px-10 lg:px-64">
-          {children}
-        </div>
+        <div className={`${containerStyle}`}>{children}</div>
       </main>
     </section>
   );

@@ -4,6 +4,9 @@ import { LogOut } from "lucide-react";
 import { useAppDispatch } from "@/app/hooks/useAppDispatch";
 import { logout } from "@/app/redux/slices/userSlice";
 import { toast } from "sonner";
+import { Button } from "@/app/components/Button";
+import Link from "next/link";
+import { Chess } from "chess.js";
 
 const Index = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +23,11 @@ const Index = () => {
           <LogOut className="icon" onClick={handleLogout} />
         </div>
       </header>
+      <div className="flex justify-center items-center">
+        <Link href="/game">
+          <Button className="my-4">Play Game</Button>
+        </Link>
+      </div>
     </section>
   );
 };
