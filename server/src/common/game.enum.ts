@@ -16,6 +16,7 @@ export enum GAME_EVENTS {
   EXCEPTION = 'exception',
   MOVE = 'move',
   MOVE_MADE = 'moveMade',
+  UNAUTHORIZED = 'unauthorized',
 }
 
 export enum GAME_STATUS {

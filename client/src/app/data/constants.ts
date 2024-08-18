@@ -10,4 +10,7 @@ export const GAME_EVENTS = {
   DISCONNECT: "disconnect",
   DISCONNECTED: "disconnected",
   EXCEPTION: "exception",
+  MOVE: "move",
+  MOVE_MADE: "moveMade",
+  UNAUTHORIZED: "unauthorized",
 };

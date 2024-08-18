@@ -15,7 +15,7 @@ const Page = () => {
   const fen = useAppSelector((state) => state.chess.fen);
   const [chess, setChess] = useState(new Chess(fen));
   const dispatch = useAppDispatch();
-  const socket = useSocket(GAME_EVENTS.JOIN_GAME, { gameId: 7 });
+  const socket = useSocket(GAME_EVENTS.JOIN_GAME, { gameId: 63 });
 
   useEffect(() => {
     dispatch(updateFen(chess.fen()));
@@ -29,12 +29,18 @@ const Page = () => {
     socket.on(GAME_EVENTS.JOIN_FAILED, (gameData) => {
       console.log("Game", gameData);
     });
+    socket.on(GAME_EVENTS.MOVE_MADE, (gameData) => {
+      console.log("mOVE MADE", gameData.board);
+      setChess(gameData.board);
+      dispatch(updateFen(gameData.board));
+    });
   }, [socket]);
 
   const handleMove = (source: Square, target: Square) => {
     try {
       const game = new Chess(fen);
       const move = game.move({ from: source, to: target, promotion: "q" });
+      socket.emit(GAME_EVENTS.MOVE, { from: source, to: target });
       // If the move is valid
       if (move) {
         dispatch(updateFen(game.fen()));
@@ -46,7 +52,6 @@ const Page = () => {
       } else return false;
     } catch (error) {
       console.log(error);
-
       return false;
     }
   };
@@ -54,7 +59,8 @@ const Page = () => {
   return (
     <Layout containerStyle="flex justify-center items-center h-[100vh]">
       <main className="lg:w-[530px] p-2 lg:p-0">
-        <Chessboard position={fen} id="BasicBoard" onPieceDrop={handleMove} />
+        <Chessboard position={fen} id="BasicBoard2" onPieceDrop={handleMove} />
+        sdfjk
       </main>
     </Layout>
   );

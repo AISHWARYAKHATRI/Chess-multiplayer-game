@@ -1,40 +1,65 @@
 import {
   CanActivate,
   ExecutionContext,
-  UnauthorizedException,
+  Injectable,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { User } from 'src/modules/users/entities/users.entity';
-import { USER } from 'src/shared/constants/response-messages';
 import { decodeToken } from 'src/utils/jwt.utils';
+import { GAME_EVENTS } from 'src/common/game.enum';
 
+@Injectable()
 export class WebSocketGuard implements CanActivate {
+  private readonly logger = new Logger(WebSocketGuard.name);
+
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const client = context.switchToWs().getClient();
-    const token = client.handshake.auth.token;
 
-    if (!token) {
-      // throw new UnauthorizedException('Authorization token not found');
-      return;
+    try {
+      const token = client.handshake.auth.token;
+
+      if (!token) {
+        this.sendUnauthorizedResponse(client, 'No token provided');
+        return false;
+      }
+
+      const { id } = decodeToken(token);
+
+      if (!id) {
+        this.sendUnauthorizedResponse(client, 'Invalid token');
+        return false;
+      }
+
+      const user = await this.userRepository.findOne({ where: { id } });
+
+      if (!user) {
+        this.sendUnauthorizedResponse(client, `No user found with id ${id}`);
+        return false;
+      }
+
+      client['user'] = user;
+      return true;
+    } catch (error) {
+      this.logger.error('Unexpected error in WebSocketGuard', error.stack);
+      this.sendUnauthorizedResponse(client, 'Unauthorized');
+      return false;
     }
+  }
 
-    const { id } = decodeToken(token);
-    const user = await this.userRepository.findOne({ where: { id: id } });
+  private sendUnauthorizedResponse(client: any, message: string) {
+    this.logger.warn(message);
+    client.emit(GAME_EVENTS.UNAUTHORIZED, { status: 401, message });
 
-    if (!user) {
-      throw new UnauthorizedException(USER.ErrorMessages.USER_NOT_FOUND);
-    }
-
-    const { ...userData } = user;
-
-    client['user'] = userData as User;
-
-    return true;
+    // Delay disconnection to ensure the message is sent
+    setTimeout(() => {
+      client.disconnect(true);
+    }, 100); // Adjust the delay as needed
   }
 }

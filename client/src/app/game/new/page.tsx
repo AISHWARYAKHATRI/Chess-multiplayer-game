@@ -24,12 +24,16 @@ const Page = () => {
     socket.on(GAME_EVENTS.EXCEPTION, (gameData) => {
       console.log("Game", gameData);
     });
+    socket.on(GAME_EVENTS.MOVE_MADE, (gameData) => {
+      console.log("mOVE MADE", gameData);
+    });
   }, [socket]);
 
   const handleMove = (source: Square, target: Square) => {
     try {
       const game = new Chess(fen);
       const move = game.move({ from: source, to: target, promotion: "q" });
+      socket.emit(GAME_EVENTS.MOVE, { from: source, to: target });
       // If the move is valid
       if (move) {
         dispatch(updateFen(game.fen()));
