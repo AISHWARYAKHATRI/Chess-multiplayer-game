@@ -15,6 +15,7 @@ import { ChessService } from '../chess.service';
 import { User } from 'src/modules/users/entities/users.entity';
 import { GAME_EVENTS } from 'src/common/game.enum';
 import { WebSocketGuard } from 'src/guards/socket.guard';
+import { Move } from 'chess.js';
 
 // Adds the user connecting to the socket
 interface CustomSocket extends Socket {
@@ -70,11 +71,15 @@ export class ChessGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @SubscribeMessage('move')
-  handleMove(@MessageBody() move: MoveDto, client: CustomSocket): void {
+  @SubscribeMessage(GAME_EVENTS.MOVE)
+  async handleMove(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() move,
+  ) {
     try {
-      // const result = this.chessService.processMove(move);
-      // this.server.emit('move', result);
+      const formattedMove = JSON.parse(move);
+      const result = await this.chessService.processMove(formattedMove);
+      this.server.emit(GAME_EVENTS.MOVE_MADE, result);
     } catch (error) {
       client.emit(GAME_EVENTS.EXCEPTION, error.message);
     }

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { GameDto } from './dto/game.dto';
+import { GameDto, MoveDto } from './dto/game.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Chess } from 'chess.js';
 
 import { Game } from './entities/chess.entity';
 import { GAME_STATUS } from 'src/common/game.enum';
@@ -9,24 +10,49 @@ import { User } from '../users/entities/users.entity';
 
 @Injectable()
 export class ChessService {
+  private games: Map<number, Chess>;
   constructor(
     @InjectRepository(Game) private readonly gameRepository: Repository<Game>,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
-  // private games: { [key: string]: GameState } = {};
 
-  // processMove(move: MoveDto): GameState {
-  //   // Process the chess move here and update the game state
-  //   const gameId = move.gameId;
-  //   const game = this.games[gameId] || this.createGame(gameId);
+  async processMove(move: MoveDto) {
+    // Process the chess move here and update the game state
+    const gameId = move.gameId;
+    const chessGame = await this.gameRepository.findOne({
+      where: { id: move.gameId },
+    });
 
-  //   // Update the game state with the new move
-  //   // game.board = updateBoard(game.board, move);
-  //   // game.turn = toggleTurn(game.turn);
+    const chess = new Chess(chessGame.board);
 
-  //   this.games[gameId] = game;
-  //   return game;
-  // }
+    // if (!chess) {
+    //   return {
+    //     message: 'Game not found.',
+    //   };
+    // }
+
+    const moveResult = chess.move({
+      from: move.from,
+      to: move.to,
+      promotion: 'q',
+    });
+
+    if (moveResult === null) {
+      return {
+        message: 'Invalid move',
+      };
+    }
+
+    const fen = chess.fen();
+    console.log('New', fen);
+    chessGame.board = fen;
+    await this.gameRepository.save(chessGame);
+
+    return {
+      gameId: gameId,
+      board: fen,
+    };
+  }
 
   async createGame(newGame: GameDto) {
     const playerWhite = await this.userRepository.findOneBy({
@@ -41,6 +67,8 @@ export class ChessService {
       player_black: null,
     });
     await this.gameRepository.save(game);
+    const chess = new Chess();
+    this.games.set(game.id, chess);
     return game.id;
   }
 
@@ -63,13 +91,11 @@ export class ChessService {
       };
     }
 
-    if (createdGame.status !== GAME_STATUS.WAITING_FOR_PLAYER) {
-      return {
-        message: 'You cannot join this game.',
-      };
-    }
-
-    console.log(createdGame, createdGame?.player_white?.id, userId);
+    // if (createdGame.status !== GAME_STATUS.WAITING_FOR_PLAYER) {
+    //   return {
+    //     message: 'You cannot join this game.',
+    //   };
+    // }
 
     // No two same players are allowed to join
     if (

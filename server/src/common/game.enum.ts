@@ -14,6 +14,8 @@ export enum GAME_EVENTS {
   DISCONNECT = 'disconnect',
   DISCONNECTED = 'disconnected',
   EXCEPTION = 'exception',
+  MOVE = 'move',
+  MOVE_MADE = 'moveMade',
 }
 
 export enum GAME_STATUS {
