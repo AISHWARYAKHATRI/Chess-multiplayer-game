@@ -1,69 +1,42 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Layout from "../../layouts/Layout";
-import { Chessboard } from "react-chessboard";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { Chess, Square, WHITE } from "chess.js";
+import { Chess } from "chess.js";
 import { updateFen } from "../../redux/slices/chessSlice";
 import { useSocket } from "../../hooks/useSocket";
 import { withAuth } from "../../components/withAuth";
 import { GAME_EVENTS } from "../../data/constants";
 import { toast } from "sonner";
+import Game from "@/app/components/game";
 
 const Page = () => {
   const fen = useAppSelector((state) => state.chess.fen);
-  const [chess, setChess] = useState(new Chess(fen));
   const dispatch = useAppDispatch();
-  const socket = useSocket(GAME_EVENTS.JOIN_GAME, { gameId: 63 });
+  const socket = useSocket(GAME_EVENTS.JOIN_GAME, { gameId: 13 });
 
   useEffect(() => {
-    dispatch(updateFen(chess.fen()));
     socket.on(GAME_EVENTS.GAME_JOINED, (gameData) => {
-      toast.success("Game joined!");
-      console.log("Game", gameData);
+      toast.success(gameData?.message);
     });
-    socket.on(GAME_EVENTS.EXCEPTION, (gameData) => {
-      console.log("Game", gameData);
+
+    socket.on(GAME_EVENTS.ALREADY_JOINED_GAME, (gameData) => {
+      console.log(gameData);
+
+      toast.error(gameData?.message);
+      dispatch(updateFen(gameData.board));
     });
+
     socket.on(GAME_EVENTS.JOIN_FAILED, (gameData) => {
       console.log("Game", gameData);
     });
+
     socket.on(GAME_EVENTS.MOVE_MADE, (gameData) => {
-      console.log("mOVE MADE", gameData.board);
-      setChess(gameData.board);
       dispatch(updateFen(gameData.board));
     });
   }, [socket]);
 
-  const handleMove = (source: Square, target: Square) => {
-    try {
-      const game = new Chess(fen);
-      const move = game.move({ from: source, to: target, promotion: "q" });
-      socket.emit(GAME_EVENTS.MOVE, { from: source, to: target });
-      // If the move is valid
-      if (move) {
-        dispatch(updateFen(game.fen()));
-        setChess(game);
-        if (game.isAttacked(source, WHITE)) {
-          console.log(true);
-        }
-        return true;
-      } else return false;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  };
-
-  return (
-    <Layout containerStyle="flex justify-center items-center h-[100vh]">
-      <main className="lg:w-[530px] p-2 lg:p-0">
-        <Chessboard position={fen} id="BasicBoard2" onPieceDrop={handleMove} />
-        sdfjk
-      </main>
-    </Layout>
-  );
+  return fen ? <Game fen={fen} socket={socket} /> : <></>;
 };
 
 export default withAuth(Page);

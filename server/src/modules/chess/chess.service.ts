@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { GameDto, MoveDto } from './dto/game.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Chess } from 'chess.js';
 
 import { Game } from './entities/chess.entity';
-import { GAME_STATUS } from 'src/common/game.enum';
+import { GAME_EVENTS, GAME_STATUS } from 'src/common/game.enum';
 import { User } from '../users/entities/users.entity';
 
 @Injectable()
@@ -16,6 +16,120 @@ export class ChessService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  // CREATE GAME
+  async createGame(newGame: GameDto) {
+    // find the user who wants to create the game
+    const playerWhite = await this.userRepository.findOneBy({
+      id: newGame.player_white,
+    });
+    // check if there are any his/her ongoing game
+    const onGoingGame = await this.gameRepository.findOne({
+      where: [
+        {
+          player_white: { id: playerWhite.id },
+          status: In([GAME_STATUS.ONGOING, GAME_STATUS.WAITING_FOR_PLAYER]),
+        },
+        {
+          player_black: { id: playerWhite.id },
+          status: In([GAME_STATUS.ONGOING, GAME_STATUS.WAITING_FOR_PLAYER]),
+        },
+      ],
+      relations: ['player_white', 'player_black'],
+    });
+
+    if (onGoingGame) {
+      return {
+        event: GAME_EVENTS.ONGOING_GAME,
+        gameId: onGoingGame.id,
+        board: onGoingGame.board,
+        message:
+          'Cannot create a new game because there is already an ongoing game.',
+      };
+    }
+    // if no on going game exists, then create new game
+    const createdGame = this.gameRepository.create({
+      ...newGame,
+      player_white: playerWhite,
+      board: newGame.board,
+      status: newGame.status,
+      result: newGame.result,
+      player_black: null,
+    });
+    // save the game
+    await this.gameRepository.save(createdGame);
+    return {
+      event: GAME_EVENTS.GAME_CREATED,
+      gameId: createdGame.id,
+      board: createdGame.board,
+      message: 'New game created.',
+    };
+  }
+
+  // JOIN GAME
+  async joinGame(gameId: number, userId: number) {
+    const createdGame = await this.gameRepository.findOne({
+      where: { id: gameId },
+      relations: ['player_white', 'player_black'],
+    });
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!createdGame) {
+      return {
+        event: GAME_EVENTS.EXCEPTION,
+        message: 'Game not found.',
+      };
+    }
+
+    if (!user) {
+      return {
+        event: GAME_EVENTS.EXCEPTION,
+        message: 'User not found',
+      };
+    }
+
+    // if (createdGame.status !== GAME_STATUS.WAITING_FOR_PLAYER) {
+    //   return {
+    //     message: 'You cannot join this game.',
+    //   };
+    // }
+
+    // No two same players are allowed to join
+    if (
+      createdGame.player_white?.id === userId ||
+      createdGame.player_black?.id === userId
+    ) {
+      return {
+        event: GAME_EVENTS.ALREADY_JOINED_GAME,
+        message: 'You have already joined this game',
+        board: createdGame.board,
+      };
+    }
+
+    if (!createdGame.player_white) {
+      createdGame.player_white = user;
+    } else if (!createdGame.player_black) {
+      createdGame.player_black = user;
+    } else {
+      return {
+        event: GAME_EVENTS.EXCEPTION,
+        message: 'The game is already full',
+      };
+    }
+
+    if (createdGame.player_black && createdGame.player_white) {
+      createdGame.status = GAME_STATUS.ONGOING;
+    }
+
+    await this.gameRepository.save(createdGame);
+
+    return {
+      event: GAME_EVENTS.GAME_JOINED,
+      message: 'You have successfully joined the game.',
+      board: createdGame.board,
+    };
+  }
+
+  // PROCESS MOVE
   async processMove(move: MoveDto) {
     // Process the chess move here and update the game state
     const gameId = move.gameId;
@@ -51,81 +165,6 @@ export class ChessService {
     return {
       gameId: gameId,
       board: fen,
-    };
-  }
-
-  async createGame(newGame: GameDto) {
-    const playerWhite = await this.userRepository.findOneBy({
-      id: newGame.player_white,
-    });
-    const game = this.gameRepository.create({
-      ...newGame,
-      player_white: playerWhite,
-      board: newGame.board,
-      status: newGame.status,
-      result: newGame.result,
-      player_black: null,
-    });
-    await this.gameRepository.save(game);
-    const chess = new Chess();
-    this.games.set(game.id, chess);
-    return game.id;
-  }
-
-  async joinGame(gameId: number, userId: number) {
-    const createdGame = await this.gameRepository.findOne({
-      where: { id: gameId },
-      relations: ['player_white', 'player_black'],
-    });
-    const user = await this.userRepository.findOne({ where: { id: userId } });
-
-    if (!createdGame) {
-      return {
-        message: 'Game not found.',
-      };
-    }
-
-    if (!user) {
-      return {
-        message: 'User not found',
-      };
-    }
-
-    // if (createdGame.status !== GAME_STATUS.WAITING_FOR_PLAYER) {
-    //   return {
-    //     message: 'You cannot join this game.',
-    //   };
-    // }
-
-    // No two same players are allowed to join
-    if (
-      createdGame.player_white?.id === userId ||
-      createdGame.player_black?.id === userId
-    ) {
-      return {
-        message: 'You have already joined this game',
-      };
-    }
-
-    if (!createdGame.player_white) {
-      createdGame.player_white = user;
-    } else if (!createdGame.player_black) {
-      createdGame.player_black = user;
-    } else {
-      return {
-        message: 'The game is already full',
-      };
-    }
-
-    if (createdGame.player_black && createdGame.player_white) {
-      createdGame.status = GAME_STATUS.ONGOING;
-    }
-
-    await this.gameRepository.save(createdGame);
-
-    return {
-      message: 'You have successfully joined the game.',
-      game: createdGame,
     };
   }
 }

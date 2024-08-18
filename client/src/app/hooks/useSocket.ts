@@ -20,6 +20,9 @@ export const useSocket = (event: string, data?: any) => {
         toast.error(data?.message);
         dispatch(logout());
       });
+      SocketService.on(GAME_EVENTS.EXCEPTION, (gameData) => {
+        toast.error(gameData?.message);
+      });
     } catch (error) {}
     return () => {
       SocketService.disconnect();

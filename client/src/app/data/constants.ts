@@ -13,4 +13,6 @@ export const GAME_EVENTS = {
   MOVE: "move",
   MOVE_MADE: "moveMade",
   UNAUTHORIZED: "unauthorized",
+  ONGOING_GAME: "ongoingGame",
+  ALREADY_JOINED_GAME: "alreadyJoinedGame",
 };

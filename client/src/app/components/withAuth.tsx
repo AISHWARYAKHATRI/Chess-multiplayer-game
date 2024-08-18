@@ -8,7 +8,6 @@ import { useAppSelector } from "../hooks/useAppSelector";
 export const withAuth = (Component: ComponentType) => {
   return function WithAuth(props: any) {
     const user = useAppSelector((state) => state.auth.user);
-    console.log(user);
 
     useEffect(() => {
       if (isEmpty(user)) {
