@@ -22,11 +22,6 @@ class SocketService {
     this.socket.on("connect_error", (error) => {
       console.error("Connection Error:", error);
     });
-    // Handle game_created event
-    this.socket.on(GAME_EVENTS.EXCEPTION, (gameId: string) => {
-      console.log("Game Created:", gameId);
-      // You can handle the game ID here, like storing it or updating the UI
-    });
   }
 
   disconnect(): void {

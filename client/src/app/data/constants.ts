@@ -16,3 +16,6 @@ export const GAME_EVENTS = {
   ONGOING_GAME: "ongoingGame",
   ALREADY_JOINED_GAME: "alreadyJoinedGame",
 };
+
+export const WHITE = "w";
+export const BLACK = "b";

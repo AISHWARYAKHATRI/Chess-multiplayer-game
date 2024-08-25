@@ -25,22 +25,6 @@ const Index = () => {
           <LogOut className="icon" onClick={handleLogout} />
         </div>
       </header>
-      <div className="flex justify-center items-center">
-        <Link href="/game/new">
-          <Button className="my-4">Play Game</Button>
-        </Link>
-      </div>
-      <div className="flex justify-center items-center">
-        <input
-          type="text"
-          name="test"
-          className="text-black"
-          onChange={(e) => setGameId(e.target.value)}
-        />
-        <Link href={`/game/${gameId}`}>
-          <Button className="my-4">Join Game</Button>
-        </Link>
-      </div>
     </section>
   );
 };

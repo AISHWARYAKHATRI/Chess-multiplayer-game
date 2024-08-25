@@ -5,9 +5,11 @@ import { GAME_EVENTS } from "../data/constants";
 import { useAppDispatch } from "./useAppDispatch";
 import { logout } from "../redux/slices/userSlice";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export const useSocket = (event: string, data?: any) => {
   const token = useAppSelector((state) => state.auth.user?.access_token);
+  const router = useRouter();
   const dispatch = useAppDispatch();
   useEffect(() => {
     try {
@@ -22,6 +24,7 @@ export const useSocket = (event: string, data?: any) => {
       });
       SocketService.on(GAME_EVENTS.EXCEPTION, (gameData) => {
         toast.error(gameData?.message);
+        router.push("/");
       });
     } catch (error) {}
     return () => {

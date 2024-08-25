@@ -1,19 +1,24 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { Chess } from "chess.js";
-import { updateFen } from "../../redux/slices/chessSlice";
+import { currentGame, updateFen } from "../../redux/slices/chessSlice";
 import { useSocket } from "../../hooks/useSocket";
 import { withAuth } from "../../components/withAuth";
 import { GAME_EVENTS } from "../../data/constants";
-import { toast } from "sonner";
-import Game from "@/app/components/game";
+import Game from "../../components/game";
+import { findCurrentPlayerColor } from "@/app/utils/helperfunctions";
 
 const Page = () => {
   const fen = useAppSelector((state) => state.chess.fen);
   const dispatch = useAppDispatch();
-  const socket = useSocket(GAME_EVENTS.JOIN_GAME, { gameId: 13 });
+  const id = useParams().id;
+
+  const socket = useSocket(GAME_EVENTS.JOIN_GAME, { gameId: id });
+  const game = useAppSelector((state) => state.chess.game);
 
   useEffect(() => {
     socket.on(GAME_EVENTS.GAME_JOINED, (gameData) => {
@@ -21,10 +26,14 @@ const Page = () => {
     });
 
     socket.on(GAME_EVENTS.ALREADY_JOINED_GAME, (gameData) => {
-      console.log(gameData);
-
       toast.error(gameData?.message);
       dispatch(updateFen(gameData.board));
+      dispatch(
+        currentGame({
+          ...gameData.game,
+          currentPlayer: findCurrentPlayerColor(gameData.game),
+        })
+      );
     });
 
     socket.on(GAME_EVENTS.JOIN_FAILED, (gameData) => {
@@ -36,7 +45,7 @@ const Page = () => {
     });
   }, [socket]);
 
-  return fen ? <Game fen={fen} socket={socket} /> : <></>;
+  return fen ? <Game fen={fen} socket={socket} currentGame={game} /> : <></>;
 };
 
 export default withAuth(Page);
