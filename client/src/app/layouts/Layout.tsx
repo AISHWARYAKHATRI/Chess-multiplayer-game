@@ -70,7 +70,7 @@ const Layout: React.FC<Props> = ({ children, containerStyles }) => {
           </ul>
         </nav>
         <div
-          className={`w-full h-full m-auto flex justify-center items-center lg:px-64 ${containerStyles}`}
+          className={`w-full h-full flex justify-center items-center lg:px-64 ${containerStyles}`}
         >
           {children}
         </div>

@@ -1,17 +1,15 @@
 "use client";
+import React from "react";
+import { Chessboard } from "react-chessboard";
+import { Chess, Square, WHITE } from "chess.js";
+import { isEmpty } from "lodash";
+
 import { GAME_EVENTS } from "@/app/data/constants";
 import { useAppDispatch } from "@/app/hooks/useAppDispatch";
 import Layout from "@/app/layouts/Layout";
 import { updateFen } from "@/app/redux/slices/chessSlice";
-import { Chess, Square, WHITE } from "chess.js";
-import React from "react";
-import { Chessboard } from "react-chessboard";
 import UserAvatar from "../UserAvatar";
-import {
-  findCurrentPlayerColor,
-  findOppenentUsername,
-} from "@/app/utils/helperfunctions";
-import { isEmpty } from "lodash";
+import { findOppenentUsername } from "@/app/utils/helperfunctions";
 
 const Index = ({ fen, socket, currentGame }: any) => {
   const dispatch = useAppDispatch();
@@ -45,7 +43,7 @@ const Index = ({ fen, socket, currentGame }: any) => {
   };
 
   return (
-    <Layout containerStyle="flex justify-center items-center h-[100vh]">
+    <Layout containerStyles="m-auto">
       <div className="flex flex-col">
         <UserAvatar
           oppenentUsername={findOppenentUsername(currentGame)}
