@@ -1,18 +1,18 @@
+import { Square } from 'chess.js';
 import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { GAME_RESULT, GAME_STATUS } from 'src/common/game.enum';
 
 export class MoveDto {
-  @IsString()
-  @IsNotEmpty()
-  gameId: string;
+  @IsUUID()
+  gameId: number;
 
   @IsString()
   @IsNotEmpty()
-  from: string;
+  from: Square;
 
   @IsString()
   @IsNotEmpty()
-  to: string;
+  to: Square;
 }
 
 export class GameDto {
@@ -39,4 +39,12 @@ export class GameDto {
     GAME_RESULT.UNDECIDED,
   ])
   result?: string;
+}
+
+export class GameState {
+  @IsUUID()
+  gameId: number;
+
+  @IsString()
+  board: string;
 }

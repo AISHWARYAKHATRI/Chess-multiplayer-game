@@ -95,3 +95,277 @@ body {
     @apply text-gray-300;
   }
 }
+
+/* square loader start */
+body {
+  background: #34495e;
+}
+
+.loading {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  border: none;
+  padding: 20px;
+}
+
+.square {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  background: #ecf0f1;
+  opacity: 0.2;
+}
+
+.square-a {
+  -webkit-animation: fadeIn 2s infinite;
+  -moz-animation: fadeIn 2s infinite;
+  animation: fadeIn 2s infinite;
+}
+
+.state1a {
+  top: 0;
+  left: 0;
+}
+
+.state2a {
+  top: 0;
+  left: 50px;
+  -webkit-animation-delay: 500ms;
+  -moz-animation-delay: 500ms;
+  animation-delay: 500ms;
+}
+
+.state3a {
+  top: 50px;
+  left: 50px;
+  -webkit-animation-delay: 1000ms;
+  -moz-animation-delay: 1000ms;
+  animation-delay: 1000ms;
+}
+
+.state4a {
+  top: 50px;
+  left: 0;
+  -webkit-animation-delay: 1500ms;
+  -moz-animation-delay: 1500ms;
+  animation-delay: 1500ms;
+}
+
+/*Square a blink blink*/
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0.2;
+  }
+  10% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0.2;
+  }
+  10% {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0.2;
+  }
+  10% {
+    opacity: 1;
+  }
+}
+/*Square-B*/
+.state1b {
+  top: 0;
+  left: 0;
+  -webkit-animation: state1-animation 2000ms infinite;
+  -moz-animation: state1-animation 2000ms infinite;
+  animation: state1-animation 2000ms infinite;
+}
+
+.state2b {
+  top: 0;
+  left: 20px;
+  -webkit-animation: state2-animation 2000ms infinite;
+  -moz-animation: state2-animation 2000ms infinite;
+  animation: state2-animation 2000ms infinite;
+}
+
+.state3b {
+  top: 20px;
+  left: 20px;
+  -webkit-animation: state3-animation 2000ms infinite;
+  -moz-animation: state3-animation 2000ms infinite;
+  animation: state3-animation 2000ms infinite;
+}
+
+.state4b {
+  top: 20px;
+  left: 0;
+  -webkit-animation: state4-animation 2000ms infinite;
+  -moz-animation: state4-animation 2000ms infinite;
+  animation: state4-animation 2000ms infinite;
+}
+
+@-webkit-keyframes state1-animation {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes state1-animation {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes state1-animation {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes state2-animation {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes state2-animation {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes state2-animation {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes state3-animation {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes state3-animation {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes state3-animation {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes state4-animation {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes state4-animation {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes state4-animation {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

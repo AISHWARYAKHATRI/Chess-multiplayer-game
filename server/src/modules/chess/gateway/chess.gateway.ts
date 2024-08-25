@@ -10,7 +10,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 
-import { MoveDto } from '../dto/game.dto';
 import { ChessService } from '../chess.service';
 import { User } from 'src/modules/users/entities/users.entity';
 import { GAME_EVENTS } from 'src/common/game.enum';
@@ -29,6 +28,7 @@ export class ChessGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly chessService: ChessService) {}
 
+  // connection
   @SubscribeMessage(GAME_EVENTS.CONNECT)
   async handleConnection(client: CustomSocket) {
     try {
@@ -39,13 +39,14 @@ export class ChessGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  // creation of game
   @SubscribeMessage(GAME_EVENTS.CREATE_GAME)
   async handleCreateGame(client: CustomSocket) {
     try {
       const game = await this.chessService.createGame({
         player_white: client?.user?.id,
       });
-      this.server.emit(GAME_EVENTS.GAME_CREATED, game);
+      this.server.emit(game.event, game);
     } catch (error) {
       client.emit(GAME_EVENTS.EXCEPTION, error.message);
     }
@@ -60,21 +61,22 @@ export class ChessGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const { gameId } = JSON.parse(data);
 
       const result = await this.chessService.joinGame(gameId, client.user.id);
-      if (result.message === 'You have successfully joined the game.') {
-        client.emit(GAME_EVENTS.GAME_JOINED, result.game);
-      } else {
-        client.emit(GAME_EVENTS.JOIN_FAILED, result.message);
-      }
+      this.server.emit(result.event, result);
+      // client.emit(result.event, result);
     } catch (error) {
       client.emit(GAME_EVENTS.EXCEPTION, error.message);
     }
   }
 
-  @SubscribeMessage('move')
-  handleMove(@MessageBody() move: MoveDto, client: CustomSocket): void {
+  @SubscribeMessage(GAME_EVENTS.MOVE)
+  async handleMove(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() move,
+  ) {
     try {
-      // const result = this.chessService.processMove(move);
-      // this.server.emit('move', result);
+      const formattedMove = JSON.parse(move);
+      const result = await this.chessService.processMove(formattedMove);
+      this.server.emit(GAME_EVENTS.MOVE_MADE, result);
     } catch (error) {
       client.emit(GAME_EVENTS.EXCEPTION, error.message);
     }

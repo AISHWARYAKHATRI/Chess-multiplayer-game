@@ -14,7 +14,7 @@ const userPersistConfig = {
 const chessPersistConfig = {
   key: "chess",
   storage,
-  whitelist: ["game", "fen"],
+  whitelist: [],
 };
 
 const makeStore = () => {

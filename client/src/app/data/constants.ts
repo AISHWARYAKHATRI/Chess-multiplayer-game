@@ -10,4 +10,12 @@ export const GAME_EVENTS = {
   DISCONNECT: "disconnect",
   DISCONNECTED: "disconnected",
   EXCEPTION: "exception",
+  MOVE: "move",
+  MOVE_MADE: "moveMade",
+  UNAUTHORIZED: "unauthorized",
+  ONGOING_GAME: "ongoingGame",
+  ALREADY_JOINED_GAME: "alreadyJoinedGame",
 };
+
+export const WHITE = "w";
+export const BLACK = "b";
