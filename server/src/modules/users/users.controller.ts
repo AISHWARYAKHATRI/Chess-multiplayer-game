@@ -1,9 +1,22 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import * as geoip from 'geoip-lite';
 
 import { CreateUserDto, LoginUserDto } from './dto/users.dto';
 import { UsersService } from './users.service';
+import { Authguard } from 'src/guards/auth.guard';
+
+interface UserRequest extends Request {
+  user: any;
+}
 
 @Controller('users')
 export class UsersController {
@@ -43,6 +56,17 @@ export class UsersController {
     try {
       const user = await this.usersService.login(userData);
       return res.status(200).send({ data: user });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @UseGuards(Authguard)
+  @Get('games')
+  async games(@Req() req: UserRequest) {
+    try {
+      const games = await this.usersService.getGames(req.user.id);
+      return games;
     } catch (error) {
       throw error;
     }

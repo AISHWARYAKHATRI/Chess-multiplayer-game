@@ -12,11 +12,14 @@ import { CreateUserDto, LoginUserDto } from './dto/users.dto';
 import { USER } from 'src/shared/constants/response-messages';
 import { User } from './entities/users.entity';
 import { jwtSign } from 'src/utils/jwt.utils';
+import { Game } from '../chess/entities/chess.entity';
+import { GAME_STATUS } from 'src/common/game.enum';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Game) private readonly gameRepository: Repository<Game>,
   ) {}
 
   async findUser(identifier: string) {
@@ -114,5 +117,15 @@ export class UsersService {
         ...user,
       },
     };
+  }
+
+  async getGames(id: number) {
+    const games = await this.gameRepository.find({
+      where: [
+        { player_black: { id }, status: GAME_STATUS.FINISHED },
+        { player_white: { id }, status: GAME_STATUS.FINISHED },
+      ],
+    });
+    return games;
   }
 }
