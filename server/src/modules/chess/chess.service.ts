@@ -37,11 +37,15 @@ export class ChessService {
       relations: ['player_white', 'player_black'],
     });
 
+    delete onGoingGame.player_black.password;
+    delete onGoingGame.player_white.password;
+
     if (onGoingGame) {
       return {
         event: GAME_EVENTS.ONGOING_GAME,
         gameId: onGoingGame.id,
         board: onGoingGame.board,
+        game: onGoingGame,
         message:
           'Cannot create a new game because there is already an ongoing game.',
       };
@@ -93,6 +97,9 @@ export class ChessService {
     //   };
     // }
 
+    delete createdGame.player_white?.password;
+    delete createdGame.player_black?.password;
+
     // No two same players are allowed to join
     if (
       createdGame.player_white?.id === userId ||
@@ -102,6 +109,7 @@ export class ChessService {
         event: GAME_EVENTS.ALREADY_JOINED_GAME,
         message: 'You have already joined this game',
         board: createdGame.board,
+        game: createdGame,
       };
     }
 
@@ -122,10 +130,13 @@ export class ChessService {
 
     await this.gameRepository.save(createdGame);
 
+    // Remove the password field before returning the response
+
     return {
       event: GAME_EVENTS.GAME_JOINED,
       message: 'You have successfully joined the game.',
       board: createdGame.board,
+      game: createdGame,
     };
   }
 
@@ -158,7 +169,6 @@ export class ChessService {
     }
 
     const fen = chess.fen();
-    console.log('New', fen);
     chessGame.board = fen;
     await this.gameRepository.save(chessGame);
 

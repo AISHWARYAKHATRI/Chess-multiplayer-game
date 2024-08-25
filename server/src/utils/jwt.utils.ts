@@ -10,7 +10,7 @@ interface TokenPayload extends JwtPayload {
 
 export const jwtSign = (payload: TokenPayload) => {
   return sign(payload, appConfig.jwtSecretKey, {
-    expiresIn: '60m',
+    expiresIn: '1d',
   });
 };
 

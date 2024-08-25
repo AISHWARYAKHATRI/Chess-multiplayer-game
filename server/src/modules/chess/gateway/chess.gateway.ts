@@ -61,7 +61,8 @@ export class ChessGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const { gameId } = JSON.parse(data);
 
       const result = await this.chessService.joinGame(gameId, client.user.id);
-      client.emit(result.event, result);
+      this.server.emit(result.event, result);
+      // client.emit(result.event, result);
     } catch (error) {
       client.emit(GAME_EVENTS.EXCEPTION, error.message);
     }
